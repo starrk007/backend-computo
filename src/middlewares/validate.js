@@ -17,7 +17,18 @@ export function validate(schema, target = 'body') {
         })
       }
 
-      req[target] = result.data
+      if (target === 'query') {
+        Object.defineProperty(req, 'query', {
+          value: result.data,
+          writable: true,
+          enumerable: true,
+          configurable: true
+        });
+      } else {
+        
+        req[target] = result.data;
+      }
+
       next()
     } catch (error) {
       next(error)
