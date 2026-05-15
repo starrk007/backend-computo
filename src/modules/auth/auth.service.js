@@ -4,6 +4,8 @@ import { authRepository } from './auth.repository.js'
 
 export class AuthService {
   async login(payload) {
+    
+    console.log("DATOS RECIBIDOS DEL FRONTEND:", payload);
     const { usuario, password } = payload
 
     const user = await authRepository.findByUsuario(usuario)
