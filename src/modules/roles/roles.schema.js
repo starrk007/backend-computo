@@ -11,6 +11,7 @@ export const roleIdParamSchema = z.object({
 })
 
 export const createRoleSchema = z.object({
+  id: z.string().optional(),
   nombre: z
     .string({ required_error: 'El nombre es obligatorio' })
     .min(2, 'El nombre debe tener al menos 2 caracteres'),
