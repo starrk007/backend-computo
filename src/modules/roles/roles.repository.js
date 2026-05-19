@@ -43,10 +43,8 @@ export class RolesRepository {
   async create(data) {
     if (data.id) {
       const ref = db.collection(COLLECTION).doc(data.id)
-      await ref.set({
-        ...data,
-        id: undefined
-      })
+      const { id, ...payload } = data
+      await ref.set(payload)
       const doc = await ref.get()
 
       return {
