@@ -74,7 +74,7 @@ export class RolesService {
     }
 
     const data = {
-      id: payload.id,
+      ...(payload.id ? { id: payload.id } : {}),
       nombre: payload.nombre,
       descripcion: payload.descripcion || '',
       permissions: Array.isArray(payload.permissions) ? payload.permissions : [],
