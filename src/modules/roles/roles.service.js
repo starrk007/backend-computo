@@ -64,7 +64,17 @@ export class RolesService {
       throw error
     }
 
+    if (payload.id) {
+      const existingById = await rolesRepository.findById(payload.id)
+      if (existingById) {
+        const error = new Error('El identificador del rol ya existe')
+        error.statusCode = 409
+        throw error
+      }
+    }
+
     const data = {
+      id: payload.id,
       nombre: payload.nombre,
       descripcion: payload.descripcion || '',
       permissions: Array.isArray(payload.permissions) ? payload.permissions : [],
