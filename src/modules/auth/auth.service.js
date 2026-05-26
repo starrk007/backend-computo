@@ -1,6 +1,7 @@
 import bcrypt from 'bcryptjs'
 import { signAccessToken } from '../../config/jwt.js'
 import { authRepository } from './auth.repository.js'
+import { rolesRepository } from '../roles/roles.repository.js'
 
 export class AuthService {
   async login(payload) {
@@ -38,12 +39,22 @@ export class AuthService {
       throw error
     }
 
+    let resolvedPermissions = Array.isArray(user.permissions) ? user.permissions : []
+    if (user.roleId) {
+      try {
+        const role = await rolesRepository.findById(user.roleId)
+        const rolePermissions = Array.isArray(role?.permissions) ? role.permissions : []
+        resolvedPermissions = Array.from(new Set([...resolvedPermissions, ...rolePermissions]))
+      } catch (e) {
+      }
+    }
+
     const token = signAccessToken({
       sub: user.id,
       usuario: user.usuario,
       role: user.role || null,
       roleId: user.roleId || null,
-      permissions: Array.isArray(user.permissions) ? user.permissions : []
+      permissions: resolvedPermissions
     })
 
     return {
